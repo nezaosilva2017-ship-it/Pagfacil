@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pag Fácil</title>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+background:#eef3f9;
+color:#222;
+padding-bottom:120px;
+}
+
+/* SPLASH */
+
+#splash{
+position:fixed;
+inset:0;
+background:linear-gradient(135deg,#00308F,#0066FF);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:99999;
+transition:.5s;
+}
+
+#splash img{
+width:230px;
+animation:pulse 1.8s infinite;
+}
+
+#splash p{
+color:white;
+margin-top:18px;
+font-size:14px;
+letter-spacing:1px;
+}
+
+@keyframes pulse{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.03);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+/* HEADER */
+
+.header{
+background:linear-gradient(135deg,#00308F,#0066FF);
+padding:35px 20px;
+border-radius:0 0 30px 30px;
+text-align:center;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.logo{
+width:230px;
+max-width:90%;
+}
+
+/* CARD */
+
+.card{
+background:white;
+margin:18px;
+padding:20px;
+border-radius:24px;
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+.card h2{
+font-size:21px;
+margin-bottom:18px;
+color:#00308F;
+}
+
+/* PERFIL */
+
+.user{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+background:linear-gradient(135deg,#00308F,#0066FF);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:20px;
+font-weight:700;
+}
+
+/* INPUTS */
+
+.input-group{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.input-group input,
+.input-group select{
+padding:16px;
+border-radius:14px;
+border:1px solid #dbe4f0;
+font-size:15px;
+outline:none;
+background:white;
+}
+
+/* BOTÕES */
+
+.btn{
+border:none;
+padding:16px;
+border-radius:14px;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
+transition:.2s;
+}
+
+.btn:active{
+transform:scale(.98);
+}
+
+.btn-primary{
+background:linear-gradient(135deg,#00308F,#0066FF);
+color:white;
+}
+
+.btn-green{
+background:linear-gradient(135deg,#17a34a,#32c852);
+color:white;
+}
+
+.btn-light{
+background:#f4f7fb;
+color:#00308F;
+}
+
+/* ACESSO RÁPIDO */
+
+.quick{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.quick-item{
+background:#f4f7fb;
+padding:20px;
+border-radius:18px;
+text-align:center;
+transition:.2s;
+}
+
+.quick-item:active{
+transform:scale(.98);
+}
+
+.quick-item div{
+font-size:32px;
+margin-bottom:10px;
+}
+
+/* LOADING */
+
+#loading{
+display:none;
+text-align:center;
+}
+
+.spinner{
+width:55px;
+height:55px;
+border:5px solid #dbe4f0;
+border-top:5px solid #0066FF;
+border-radius:50%;
+margin:0 auto 18px;
+animation:girar 1s linear infinite;
+}
+
+@keyframes girar{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
+}
+
+}
+
+/* RESULTADO */
+
+#resultado{
+display:none;
+}
+
+/* DÉBITOS */
+
+.debito{
+background:#f4f7fb;
+padding:16px;
+border-radius:16px;
+margin-bottom:14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+input[type="checkbox"]{
+width:20px;
+height:20px;
+accent-color:#0066FF;
+}
+
+/* BENEFÍCIOS */
+
+.benefit{
+padding:18px;
+border-radius:20px;
+margin-top:16px;
+color:white;
+}
+
+.moto{
+background:linear-gradient(135deg,#ff7a00,#ff9d1f);
+}
+
+.carro{
+background:linear-gradient(135deg,#00308F,#0066FF);
+}
+
+.truck{
+background:linear-gradient(135deg,#17a34a,#32c852);
+}
+
+/* TOTAL */
+
+.total{
+background:linear-gradient(135deg,#00308F,#0066FF);
+padding:24px;
+border-radius:22px;
+text-align:center;
+color:white;
+margin-top:20px;
+}
+
+.total h1{
+font-size:34px;
+margin:8px 0;
+}
+
+/* SEGURANÇA */
+
+.security{
+background:#f4f7fb;
+padding:16px;
+border-radius:16px;
+margin-bottom:14px;
+display:flex;
+gap:14px;
+align-items:flex-start;
+}
+
+/* STATUS */
+
+.status{
+background:#e8fff0;
+padding:16px;
+border-radius:16px;
+text-align:center;
+margin-top:16px;
+display:none;
+}
+
+.status h3{
+color:#17a34a;
+margin-bottom:5px;
+}
+
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+z-index:9999;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.modal-content{
+background:white;
+width:100%;
+max-width:400px;
+padding:24px;
+border-radius:26px;
+}
+
+.qrcode{
+width:180px;
+height:180px;
+border:2px dashed #32c852;
+border-radius:20px;
+margin:0 auto 20px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#32c852;
+font-weight:700;
+}
+
+.pix-code{
+background:#f4f7fb;
+padding:14px;
+border-radius:14px;
+font-size:12px;
+word-break:break-all;
+margin-bottom:15px;
+}
+
+/* MENU */
+
+#menu{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+box-shadow:0 -5px 20px rgba(0,0,0,.08);
+border-radius:22px 22px 0 0;
+z-index:999;
+}
+
+.menu-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:12px;
+color:#666;
+gap:4px;
+transition:.2s;
+}
+
+.menu-item.active{
+color:#0066FF;
+font-weight:700;
+}
+
+.menu-item div{
+font-size:22px;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:500px){
+
+.logo{
+width:190px;
+}
+
+.total h1{
+font-size:28px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SPLASH -->
+
+<div id="splash">
+
+<img src="assets/logo.png">
+
+<p>CARREGANDO SISTEMA...</p>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<img src="assets/logo.png" class="logo">
+
+</div>
+
+<!-- PERFIL -->
+
+<div class="card">
+
+<div class="user">
+
+<div>
+
+<h2 style="margin-bottom:5px;">
+Olá 👋
+</h2>
+
+<p style="color:#666;">
+Pagamento rápido, intuitivo e seguro
+</p>
+
+</div>
+
+<div class="avatar">
+PF
+</div>
+
+</div>
+
+</div>
+
+<!-- CONSULTA -->
+
+<div class="card" id="consulta">
+
+<h2>Consultar veículo</h2>
+
+<div class="input-group">
+
+<select id="tipoVeiculo">
+
+<option value="moto">
+🏍️ Moto
+</option>
+
+<option value="carro">
+🚗 Carro
+</option>
+
+<option value="caminhao">
+🚚 Caminhão
+</option>
+
+</select>
+
+<input
+type="text"
+id="placa"
+placeholder="Digite a placa">
+
+<input
+type="text"
+id="renavam"
+placeholder="Digite o Renavam">
+
+<button
+class="btn btn-primary"
+onclick="consultarDebitos()">
+
+CONSULTAR DÉBITOS
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ACESSO RÁPIDO -->
+
+<div class="card">
+
+<h2>Acesso rápido</h2>
+
+<div class="quick">
+
+<div class="quick-item"
+onclick="abrirConsulta()">
+
+<div>🚗</div>
+<p>Consulta</p>
+
+</div>
+
+<div class="quick-item"
+onclick="abrirPix()">
+
+<div>⚡</div>
+<p>Pix</p>
+
+</div>
+
+<div class="quick-item"
+onclick="abrirParcelamento()">
+
+<div>💳</div>
+<p>Parcelamento</p>
+
+</div>
+
+<div class="quick-item"
+onclick="abrirHistorico()">
+
+<div>📄</div>
+<p>Histórico</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- LOADING -->
+
+<div class="card"
+id="loading">
+
+<div class="spinner"></div>
+
+<h3 style="color:#00308F;">
+Consultando débitos...
+</h3>
+
+</div>
+
+<!-- RESULTADO -->
+
+<div class="card"
+id="resultado">
+
+<h2>Débitos encontrados</h2>
+
+<button
+class="btn btn-light"
+onclick="selecionarTodos()"
+style="width:100%;margin-bottom:16px;">
+
+Selecionar tudo
+
+</button>
+
+<!-- IPVA -->
+
+<div class="debito">
+
+<div class="left">
+
+<input
+type="checkbox"
+class="checkDebito"
+checked
+value="1240"
+onchange="atualizarTotal()">
+
+<span>IPVA</span>
+
+</div>
+
+<strong>R$ 1.240</strong>
+
+</div>
+
+<!-- LICENCIAMENTO -->
+
+<div class="debito">
+
+<div class="left">
+
+<input
+type="checkbox"
+class="checkDebito"
+checked
+value="180"
+onchange="atualizarTotal()">
+
+<span>Licenciamento</span>
+
+</div>
+
+<strong>R$ 180</strong>
+
+</div>
+
+<!-- MULTAS -->
+
+<div class="debito">
+
+<div class="left">
+
+<input
+type="checkbox"
+class="checkDebito"
+checked
+value="320"
+onchange="atualizarTotal()">
+
+<span>Multas</span>
+
+</div>
+
+<strong>R$ 320</strong>
+
+</div>
+
+<!-- BENEFÍCIOS -->
+
+<div id="beneficio"></div>
+
+<!-- TOTAL -->
+
+<div class="total">
+
+<p>Total selecionado</p>
+
+<h1 id="total">
+R$ 1.740
+</h1>
+
+<p id="taxaPix"
+style="font-size:14px;margin-top:10px;">
+</p>
+
+<p id="msgParcelamento"
+style="font-size:13px;opacity:.9;margin-top:6px;">
+</p>
+
+</div>
+
+<!-- BOTÕES -->
+
+<div style="
+display:flex;
+flex-direction:column;
+gap:14px;
+margin-top:18px;
+">
+
+<button
+class="btn btn-green"
+onclick="pix()">
+
+PAGAR COM PIX TESTE
+
+</button>
+
+<button
+id="btnParcelar"
+class="btn btn-primary"
+onclick="parcelar()">
+
+PARCELAR EM 12X
+
+</button>
+
+</div>
+
+<div
+class="status"
+id="statusPagamento">
+
+<h3>
+Pagamento enviado
+</h3>
+
+<p>
+Aguardando confirmação do sistema.
+</p>
+
+</div>
+
+</div>
+
+<!-- SEGURANÇA -->
+
+<div class="card">
+
+<h2>Segurança</h2>
+
+<div class="security">
+
+<div style="font-size:28px;">
+🔒
+</div>
+
+<div>
+
+<strong>Conexão protegida</strong>
+
+<p style="
+font-size:14px;
+color:#666;
+margin-top:5px;
+line-height:1.6;
+">
+
+Criptografia e ambiente seguro.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="security">
+
+<div style="font-size:28px;">
+🛡️
+</div>
+
+<div>
+
+<strong>Antifraude automático</strong>
+
+<p style="
+font-size:14px;
+color:#666;
+margin-top:5px;
+line-height:1.6;
+">
+
+Sistema preparado para integração antifraude.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="security">
+
+<div style="font-size:28px;">
+📄
+</div>
+
+<div>
+
+<strong>LGPD e conformidade</strong>
+
+<p style="
+font-size:14px;
+color:#666;
+margin-top:5px;
+line-height:1.6;
+">
+
+Tratamento de dados conforme legislação brasileira.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TERMOS -->
+
+<div class="card">
+
+<h2>Termos e privacidade</h2>
+
+<label style="
+display:flex;
+align-items:flex-start;
+gap:12px;
+background:#f4f7fb;
+padding:16px;
+border-radius:16px;
+">
+
+<input
+type="checkbox"
+id="aceiteTermos">
+
+<div>
+
+<strong>
+Aceito os termos de uso
+</strong>
+
+<p style="
+font-size:13px;
+color:#666;
+margin-top:5px;
+line-height:1.6;
+">
+
+O usuário concorda com as políticas da plataforma.
+
+</p>
+
+</div>
+
+</label>
+
+</div>
+
+<!-- MODAL PIX -->
+
+<div class="modal"
+id="pixModal">
+
+<div class="modal-content">
+
+<h2 style="
+color:#00308F;
+margin-bottom:20px;
+text-align:center;
+">
+
+Pagamento Pix Teste
+
+</h2>
+
+<div class="qrcode">
+QR CODE TESTE
+</div>
+
+<div
+class="pix-code"
+id="codigoPix">
+
+000201TESTEPIXFAKEPAGFACIL2025
+
+</div>
+
+<button
+class="btn btn-green"
+onclick="copiarPix()"
+style="width:100%;margin-bottom:12px;">
+
+COPIAR PIX
+
+</button>
+
+<button
+class="btn btn-primary"
+onclick="confirmarPagamento()"
+style="width:100%;">
+
+JÁ PAGUEI
+
+</button>
+
+</div>
+
+</div>
+
+<!-- MENU -->
+
+<div id="menu">
+
+<div
+class="menu-item active"
+onclick="abrirInicio()">
+
+<div>🏠</div>
+<span>Início</span>
+
+</div>
+
+<div
+class="menu-item"
+onclick="abrirConsulta()">
+
+<div>🚗</div>
+<span>Consulta</span>
+
+</div>
+
+<div
+class="menu-item"
+onclick="abrirPagamentos()">
+
+<div>💳</div>
+<span>Pagamentos</span>
+
+</div>
+
+<div
+class="menu-item"
+onclick="abrirConta()">
+
+<div>👤</div>
+<span>Conta</span>
+
+</div>
+
+</div>
+
+<script>
+
+/* SPLASH */
+
+setTimeout(()=>{
+
+document.getElementById('splash')
+.style.opacity='0';
+
+setTimeout(()=>{
+
+document.getElementById('splash')
+.style.display='none';
+
+},600);
+
+},2200);
+
+/* CONSULTA */
+
+function consultarDebitos(){
+
+const placa =
+document.getElementById('placa').value;
+
+const renavam =
+document.getElementById('renavam').value;
+
+if(placa==='' || renavam===''){
+
+alert(
+'Preencha placa e Renavam.'
+);
+
+return;
+
+}
+
+document.getElementById('loading')
+.style.display='block';
+
+document.getElementById('resultado')
+.style.display='none';
+
+setTimeout(()=>{
+
+document.getElementById('loading')
+.style.display='none';
+
+document.getElementById('resultado')
+.style.display='block';
+
+atualizarBeneficios();
+
+},1800);
+
+}
+
+/* BENEFÍCIOS */
+
+function atualizarBeneficios(){
+
+const tipo =
+document.getElementById('tipoVeiculo').value;
+
+const beneficio =
+document.getElementById('beneficio');
+
+const taxa =
+document.getElementById('taxaPix');
+
+if(tipo==='moto'){
+
+beneficio.innerHTML=`
+
+<div class="benefit moto">
+
+<h3 style="margin-bottom:8px;">
+🏍️ Moto Fácil
+</h3>
+
+<p style="line-height:1.6;font-size:14px;">
+Taxa reduzida para baixa cilindrada.
+</p>
+
+</div>
+
+`;
+
+taxa.innerText =
+'Taxa Pix Moto: R$ 4,90';
+
+}
+
+else if(tipo==='carro'){
+
+beneficio.innerHTML=`
+
+<div class="benefit carro">
+
+<h3 style="margin-bottom:8px;">
+🚗 Veículo Particular
+</h3>
+
+<p style="line-height:1.6;font-size:14px;">
+Pagamento rápido e seguro.
+</p>
+
+</div>
+
+`;
+
+taxa.innerText =
+'Taxa Pix Carro: R$ 14,90';
+
+}
+
+else{
+
+beneficio.innerHTML=`
+
+<div class="benefit truck">
+
+<h3 style="margin-bottom:8px;">
+🚚 Benefício Caminhoneiro
+</h3>
+
+<p style="line-height:1.6;font-size:14px;">
+Até 5% OFF para caminhões.
+</p>
+
+</div>
+
+`;
+
+taxa.innerText =
+'Taxa Pix Caminhão: R$ 29,90';
+
+}
+
+}
+
+/* TOTAL */
+
+function atualizarTotal(){
+
+const checks =
+document.querySelectorAll('.checkDebito');
+
+let total = 0;
+
+checks.forEach(check=>{
+
+if(check.checked){
+
+total += Number(check.value);
+
+}
+
+});
+
+const valor =
+total.toLocaleString('pt-BR',{
+
+style:'currency',
+currency:'BRL'
+
+});
+
+document.getElementById('total')
+.innerText = valor;
+
+const btn =
+document.getElementById('btnParcelar');
+
+const msg =
+document.getElementById('msgParcelamento');
+
+if(total < 300){
+
+btn.disabled=true;
+
+btn.style.opacity='.5';
+
+msg.innerText =
+'Parcelamento acima de R$ 300';
+
+}
+
+else{
+
+btn.disabled=false;
+
+btn.style.opacity='1';
+
+msg.innerText =
+'Parcelamento disponível';
+
+}
+
+}
+
+/* SELECIONAR */
+
+function selecionarTodos(){
+
+const checks =
+document.querySelectorAll('.checkDebito');
+
+checks.forEach(check=>{
+
+check.checked=true;
+
+});
+
+atualizarTotal();
+
+}
+
+/* TERMOS */
+
+function validarAceite(){
+
+const aceite =
+document.getElementById('aceiteTermos');
+
+if(!aceite.checked){
+
+alert(
+'Você precisa aceitar os termos.'
+);
+
+return false;
+
+}
+
+return true;
+
+}
+
+/* PIX */
+
+function pix(){
+
+if(!validarAceite()){
+
+return;
+
+}
+
+document.getElementById('pixModal')
+.style.display='flex';
+
+}
+
+function copiarPix(){
+
+const codigo =
+document.getElementById('codigoPix')
+.innerText;
+
+navigator.clipboard.writeText(codigo);
+
+alert(
+'Código Pix copiado!'
+);
+
+}
+
+function confirmarPagamento(){
+
+document.getElementById('pixModal')
+.style.display='none';
+
+document.getElementById('statusPagamento')
+.style.display='block';
+
+salvarHistorico();
+
+}
+
+/* PARCELAMENTO */
+
+function parcelar(){
+
+if(!validarAceite()){
+
+return;
+
+}
+
+const total =
+document.getElementById('total')
+.innerText;
+
+alert(
+'Parcelamento iniciado para '+total
+);
+
+}
+
+/* MENU */
+
+function abrirInicio(){
+
+window.scrollTo({
+
+top:0,
+behavior:'smooth'
+
+});
+
+}
+
+function abrirConsulta(){
+
+document.getElementById('consulta')
+.scrollIntoView({
+
+behavior:'smooth'
+
+});
+
+}
+
+function abrirPagamentos(){
+
+document.getElementById('resultado')
+.scrollIntoView({
+
+behavior:'smooth'
+
+});
+
+}
+
+function abrirConta(){
+
+alert(
+'Área da conta em desenvolvimento.'
+);
+
+}
+
+function abrirPix(){
+
+pix();
+
+}
+
+function abrirParcelamento(){
+
+alert(
+'Parcelamento em fase de teste.'
+);
+
+}
+
+function abrirHistorico(){
+
+alert(
+'Histórico em desenvolvimento.'
+);
+
+}
+
+/* HISTÓRICO TESTE */
+
+function salvarHistorico(){
+
+console.log(
+'Pagamento teste salvo.'
+);
+
+}
+
+/* INICIAR */
+
+window.onload = ()=>{
+
+atualizarTotal();
+
+};
+
+</script>
+
+</body>
+</html>
